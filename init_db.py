@@ -9,16 +9,16 @@ from config import (
 connection = sqlite3.connect('data.db')
 cursor = connection.cursor()
 
-create_table = "CREATE TABLE users (id int, username text, password text)"
+create_table = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)"
 cursor.execute(create_table)
 
 insert_query = "INSERT INTO users VALUES (?, ?, ?)"
 
-users = [
+defaults = [
     (1, main_user, main_pass),
     (2, 'guest', guest_pass)
 ]
-cursor.executemany(insert_query, users)
+cursor.executemany(insert_query, defaults)
 
 connection.commit()
 connection.close()
