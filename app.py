@@ -2,10 +2,10 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 
-from secure import authenticate, identity
-from user import UserRegister
+from auth.secure import authenticate, identity
+from auth.user import UserRegister
 
-from config import (
+from settings.config import (
     app_key
 )
 

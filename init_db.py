@@ -1,6 +1,6 @@
 import sqlite3
 
-from config import (
+from settings.config import (
     main_user,
     main_pass,
     guest_pass
