@@ -1,24 +1,34 @@
 import sqlite3
+from sqlite3 import Error
 
-from settings.config import (
-    main_user,
-    main_pass,
-    guest_pass
-)
+class Table:
+    def __init__(self, tablename, tableargs, dbname='data.db'):
+        self.dbname = dbname
+        self.tablename = tablename
+        self.tableargs = tableargs
 
-connection = sqlite3.connect('data.db')
-cursor = connection.cursor()
+        self.connection = None
+        self.cursor = None
 
-create_table = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)"
-cursor.execute(create_table)
+        self.__create__connection()
 
-insert_query = "INSERT INTO users VALUES (?, ?, ?)"
+    def __del__(self):
+        if self.connection:
+            self.connection.commit()
+            self.connection.close()
 
-defaults = [
-    (1, main_user, main_pass),
-    (2, 'guest', guest_pass)
-]
-cursor.executemany(insert_query, defaults)
+    def __create__connection(self):
+        try:
+            creation_query = f"CREATE TABLE IF NOT EXISTS {self.tablename} ({self.tableargs})"
 
-connection.commit()
-connection.close()
+            self.connection = sqlite3.connect(self.dbname)
+            self.cursor = self.connection.cursor()
+            self.cursor.execute(creation_query)
+        except Error as e:
+            print(e)
+
+    def insert_values(self, values):
+        insert_query = f"INSERT INTO {self.tablename} VALUES ({values})"
+        self.cursor.execute(insert_query)
+
+

@@ -40,7 +40,6 @@ class User:
         return user
 
 class UserRegister(Resource):
-
     parser = reqparse.RequestParser()
     parser.add_argument('username',
         type=str,
